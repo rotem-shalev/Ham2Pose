@@ -1,0 +1,33 @@
+# data
+max_seq_size: 200
+fps: 25
+pose: "openpose"
+pose_components: null
+dataset: "hamnosys"
+leave_out: "" # train without one language? in "hamnosys" dataset, options are: "pjm", "dgs", "gsl", "lsf"
+
+# training
+no_wandb: False
+seed: 42
+num_gpus: 1
+batch_size: 16
+optimizer: "Adam"
+lr: 0.001
+max_epochs: 2000
+noise_epsilon: 0.0001 # how much noise to add to each step input during training
+tf_p: 0.5 # probability for teacher forcing
+seq_len_weight: 0.00002 # weight of the sequence length loss in the total loss
+
+# model
+hidden_dim: 128
+text_encoder_depth: 2
+pose_encoder_depth: 4
+encoder_heads: 2
+num_steps: 10
+separate_positional_embedding: True # use different positional embeddings for the text, pose?
+num_pose_projection_layers: 1
+encoder_dim_feedforward: 2048
+model_name: "ham2pose"
+ckpt: "checkpoints" # checkpoints directory name inside "./models/{args.model_name}"
+output_dir: "videos" # output videos directory name inside "./models/{args.model_name}"
+
