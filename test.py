@@ -1,5 +1,6 @@
 import os
 import json
+import yaml
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
@@ -9,9 +10,9 @@ sys.path.insert(0, rootdir)
 
 from args import args
 from data.data import get_dataset
-from tokenizers.hamnosys.hamnosys_tokenizer import HamNoSysTokenizer
 from constants import DATASET_SIZE, num_steps_to_batch_size
 from model import IterativeTextGuidedPoseGenerationModel
+from train import get_model_args
 from predict import pred, predict_pose
 from metrics import get_poses_ranks
 
@@ -153,7 +154,7 @@ def test(model, model_name, dataset, test_seq_len_predictor=True, test_ranks=Tru
     os.makedirs(f"models/{model_name}/results", exist_ok=True)
 
     if output_dir != "":
-        pred(model, dataset, output_dir)
+        pred(model, dataset, f"models/{model_name}/{output_dir}")
 
     if test_seq_len_predictor:
         test_seq_len(model, dataset, model_name)
@@ -163,37 +164,31 @@ def test(model, model_name, dataset, test_seq_len_predictor=True, test_ranks=Tru
 
 
 if __name__ == "__main__":
-    args.batch_size = num_steps_to_batch_size[args.num_steps]
+    args = vars(args)
+    if args["config_file"]:  # override args with yaml config file
+        with open(args["config_file"], 'r') as f:
+            args = yaml.safe_load(f)
+
+    args["batch_size"] = num_steps_to_batch_size[args["num_steps"]]
     test_size = int(0.1 * DATASET_SIZE)
-    if args.leave_out != "":
-        _, dataset = get_dataset(name=args.dataset, poses=args.pose, fps=args.fps, components=args.pose_components,
-                                 leave_out=args.leave_out, max_seq_size=args.max_seq_size, split=f'test')
+    if args["leave_out"] != "":
+        _, dataset = get_dataset(name=args["dataset"], poses=args["pose"], fps=args["fps"],
+                                 components=args["pose_components"], leave_out=args["leave_out"],
+                                 max_seq_size=args["max_seq_size"], split='test')
     else:
-        dataset = get_dataset(name=args.dataset, poses=args.pose, fps=args.fps,
-                              components=args.pose_components, max_seq_size=args.max_seq_size,
+        dataset = get_dataset(name=args["dataset"], poses=args["pose"], fps=args["fps"],
+                              components=args["pose_components"], max_seq_size=args["max_seq_size"],
                               split=f'test[:{test_size}]')
 
     _, num_pose_joints, num_pose_dims = dataset[0]["pose"]["data"].shape
     pose_header = dataset.data[0]["pose"].header
 
-    model_args = dict(tokenizer=HamNoSysTokenizer(),
-                      pose_dims=(num_pose_joints, num_pose_dims),
-                      hidden_dim=args.hidden_dim,
-                      text_encoder_depth=args.text_encoder_depth,
-                      pose_encoder_depth=args.pose_encoder_depth,
-                      encoder_heads=args.encoder_heads,
-                      max_seq_size=args.max_seq_size,
-                      num_steps=args.num_steps,
-                      tf_p=args.tf_p,
-                      separate_positional_embedding=args.separate_positional_embedding,
-                      num_pose_projection_layers=args.num_pose_projection_layers,
-                      concat=True
-                      )
+    model_args = get_model_args(args, num_pose_joints, num_pose_dims)
 
-    args.checkpoint = f"models/{args.model_name}/model.ckpt"
-    model = IterativeTextGuidedPoseGenerationModel.load_from_checkpoint(args.checkpoint, **model_args)
+    ckpt = f"./models/{args['model_name']}/{args['ckpt']}/model.ckpt"
+    model = IterativeTextGuidedPoseGenerationModel.load_from_checkpoint(ckpt, **model_args)
     model.eval()
 
-    test(model, args.model_name, dataset, test_seq_len_predictor=True, test_ranks=False, output_dir=args.output_dir,
-         keypoints_path="data/hamnosys/keypoints")
+    test(model, args["model_name"], dataset, test_seq_len_predictor=True, test_ranks=False,
+         output_dir=args["output_dir"], keypoints_path="data/hamnosys/keypoints")
 

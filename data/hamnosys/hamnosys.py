@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 from os import path
 import json
-
+import zipfile
 from typing import Dict
 from pose_format.utils.openpose import load_openpose
 from pose_format.pose import Pose
@@ -164,6 +164,9 @@ class Hamnosys(tfds.core.GeneratorBasedBuilder):
 
     def _generate_examples(self, data, is_train):
         """Yields examples."""
+        if not os.path.isdir(_KEYPOINTS_PATH) and os.path.isfile("data/hamnosys/keypoints.zip"):
+            with zipfile.ZipFile("data/hamnosys/keypoints.zip", 'r') as zip_ref:
+                zip_ref.extractall(_KEYPOINTS_PATH)
         default_fps = 25
         i = 0
         for key, val in data.items():

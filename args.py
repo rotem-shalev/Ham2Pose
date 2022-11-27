@@ -45,8 +45,10 @@ parser.add_argument('--num_pose_projection_layers', type=int, default=1, help='n
 parser.add_argument('--encoder_dim_feedforward', type=int, default=2048, help='size of encoder dim feedforward')
 
 # Prediction args
-parser.add_argument('--ckpt', type=str, default="", metavar='PATH', help="Checkpoint path for prediction")
-parser.add_argument('--output_dir', type=str, default="", metavar='PATH', help="Path for saving prediction files")
+parser.add_argument('--ckpt', type=str, default="checkpoints", metavar='PATH', help="Checkpoints directory name "
+                                                                                    "inside model directory")
+parser.add_argument('--output_dir', type=str, default="videos", metavar='PATH', help="output videos directory name "
+                                                                                     "inside model directory")
 
 # test args
 parser.add_argument('--test', type=bool, default=False, help="test?")

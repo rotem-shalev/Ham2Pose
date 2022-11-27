@@ -61,8 +61,8 @@ if __name__ == '__main__':
         LOGGER = WandbLogger(project="ham2pose", log_model=False, offline=False, id=args["model_name"])
         if LOGGER.experiment.sweep_id is None:
             LOGGER.log_hyperparams(args)
-    args["batch_size"] = num_steps_to_batch_size[args["num_steps"]]
 
+    args["batch_size"] = num_steps_to_batch_size[args["num_steps"]]
     test_size = int(0.1*DATASET_SIZE)
     train_split = f'test[{test_size}:]+train'
     test_split = f'test[:{test_size}]'
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     train_loader = DataLoader(train_dataset, batch_size=args["batch_size"],
                               shuffle=True, collate_fn=zero_pad_collator)
     test_loader = DataLoader(test_dataset, batch_size=args["batch_size"],
-                                   collate_fn=zero_pad_collator)
+                             collate_fn=zero_pad_collator)
 
     _, num_pose_joints, num_pose_dims = train_dataset[0]["pose"]["data"].shape
 

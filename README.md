@@ -15,11 +15,8 @@ $ conda activate Ham2Pose
 $ pip3 install requirements.txt
 ```
 
-2. Prepare the data: download the keypoints from [this](https://drive.google.com/file/d/1XpE1DHH9no7jxgLtIf
--ZQdN4yqHakSfB/view?usp
-=sharing) link. The HamNoSys and urls for the original videos can be found in `data/data.json`. To train using
- different data, download the videos and use [OpenPose](https://github.com/CMU
- -Perceptual-Computing-Lab/openpose) to extract body, face, and hands keypoints from them (137 in total).
+2. Prepare new data: To train the model using data that isn't part of our dataset, download the videos and use
+ [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) to extract body, face, and hands keypoints from them (137 in total).
  
   
 ## Train
@@ -45,6 +42,6 @@ To test an existing model with the default configuration use:
 $ python test.py
 ```
 
-To pass other arguments use one of the options mentioned under Train.
+The default configuration will test our supplied pretrained model "Ham2Pose". To train and test a different model, either change the `model_name` in the configuration, or delete the existing checkpoint from the `models` directory.
 
-The pretrained model will be supplied soon.
+To change other arguments use one of the options mentioned under Train.
