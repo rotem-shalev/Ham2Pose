@@ -50,14 +50,10 @@ To change other arguments use one of the options mentioned under Train.
 
 If you find this research useful, please cite the following:
 ```
-@misc{https://doi.org/10.48550/arxiv.2211.13613,
-  doi = {10.48550/ARXIV.2211.13613},
-  url = {https://arxiv.org/abs/2211.13613},
-  author = {Shalev-Arkushin, Rotem and Moryossef, Amit and Fried, Ohad},
-  keywords = {Computer Vision and Pattern Recognition (cs.CV), Computation and Language (cs.CL), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  title = {Ham2Pose: Animating Sign Language Notation into Pose Sequences},  
-  publisher = {arXiv},
-  year = {2022},
-  copyright = {Creative Commons Attribution Share Alike 4.0 International}
+@article{shalev2022ham2pose,
+  title={Ham2Pose: Animating Sign Language Notation into Pose Sequences},
+  author={Shalev-Arkushin, Rotem and Moryossef, Amit and Fried, Ohad},
+  journal={arXiv preprint arXiv:2211.13613},
+  year={2022}
 }
 ```
