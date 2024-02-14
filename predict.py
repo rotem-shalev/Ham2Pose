@@ -193,7 +193,7 @@ def predict_pose(model, datum, pose_header, model_for_seq_len=None, first_pose_s
 
     data = torch.unsqueeze(seq, 1).cpu()
     conf = torch.ones_like(data[:, :, :, 0])
-    pose_body = NumPyPoseBody(25, data.numpy(), conf.numpy())
+    pose_body = NumPyPoseBody(25, data.detach().numpy(), conf.numpy())
     predicted_pose = Pose(pose_header, pose_body)
     pose_hide_legs(predicted_pose)
     normalization_info = pose_normalization_info(predicted_pose.header)

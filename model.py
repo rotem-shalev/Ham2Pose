@@ -143,8 +143,12 @@ class IterativeTextGuidedPoseGenerationModel(pl.LightningModule):
         seq_len = round(float(seq_len))
         seq_len = max(min(seq_len, self.max_seq_size), self.min_seq_size)
         sequence_length = seq_len if sequence_length == -1 else sequence_length
+
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        first_pose_to = first_pose.to(device)
+
         pose_sequence = {
-            "data": first_pose.expand(1, sequence_length, *self.pose_dims),
+            "data": first_pose_to.expand(1, sequence_length, *self.pose_dims),
             "mask": torch.zeros([1, sequence_length], dtype=torch.bool, device=self.device),
         }
 
