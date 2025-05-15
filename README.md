@@ -12,7 +12,7 @@ The first method for animating HamNoSys into pose sequences.
 ```bash
 $ conda create --name Ham2Pose python=3.7
 $ conda activate Ham2Pose
-$ pip3 install requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 2. Prepare new data: To train the model using data that isn't part of our dataset, download the videos and use
